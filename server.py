@@ -15,7 +15,7 @@ model = YOLO("weights/yolov10s.pt")
 model.fuse()
 
 inference_counter = 0
-CLEAR_INTERVAL = 50  # 每 50 次推論清一次 GPU 記憶體
+CLEAR_INTERVAL = 50  # 每 50 次推論清一次 GPU 記憶體 2
 
 def preprocess_image(image_bytes):
     nparr = np.frombuffer(image_bytes, np.uint8)
