@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>YOLOv10 偵測結果</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        img { max-width: 600px; border: 1px solid #ccc; margin-bottom: 10px; }
+        .image-block { margin-bottom: 40px; }
+    </style>
+</head>
+<body>
+    <h1>YOLOv10 影像偵測介面</h1>
+
+    {% if images %}
+        <form action="/ping_test" method="post" style="margin-bottom: 20px;">
+            <button type="submit">測試 API 響應時間</button>
+        </form>
+        <form action="/detect" method="post">
+            <button type="submit">開始偵測</button>
+        </form>
+        <h3>預覽影像：</h3>
+        {% for image in images %}
+            <div class="image-block">
+                <p>{{ image }}</p>
+                <img src="{{ url_for('static', filename='test_images/' + image) }}">
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if results %}
+        <h2>偵測完成</h2>
+        <p>平均 FPS（含網路）: {{ "%.2f"|format(fps) }}</p>
+        {% for r in results %}
+            <div class="image-block">
+                <h3>{{ r.filename }}</h3>
+                <ul>
+                    <li>純推論時間（不含畫圖與存圖）: {{ "%.3f"|format(r.inference_time) }} 秒</li>
+                    <li>畫框與存圖時間: {{ "%.3f"|format(r.draw_time) }} 秒</li>
+                    <li>總請求耗時（含網路與 API 回傳）: {{ "%.3f"|format(r.total_request_time) }} 秒</li>
+                </ul>
+                <img src="{{ url_for('static', filename='results/' + r.filename) }}">
+            </div>
+        {% endfor %}
+        <a href="/">返回上一步</a>
+    {% endif %}
+</body>
+</html>
